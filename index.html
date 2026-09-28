@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RCASAS - Gestión de Agua Edificio Blue</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilos personalizados para acoplar la paleta corporativa RCASAS */
+        .bg-rcasas-dark {
+            background-color: #0b192c;
+        }
+        .bg-rcasas-card {
+            background-color: #11223d;
+        }
+        .border-gold {
+            border-color: #d4af37;
+        }
+        .text-gold {
+            color: #d4af37;
+        }
+        .bg-gold {
+            background-color: #d4af37;
+        }
+        .bg-gold:hover {
+            background-color: #bfa130;
+        }
+    </style>
+</head>
+<body class="bg-rcasas-dark text-slate-100 min-h-screen p-4">
+
+    <div class="max-w-4xl mx-auto">
+        <!-- Encabezado Corporativo RCASAS con Logo -->
+        <div class="bg-rcasas-card border border-gold/30 p-6 rounded-2xl shadow-2xl mb-6 text-center relative overflow-hidden">
+            <!-- Detalle decorativo dorado inferior -->
+            <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-600 via-yellow-500 to-amber-600"></div>
+            
+            <!-- Logotipo o Símbolo Corporativo adaptado -->
+            <div class="flex justify-center mb-3">
+                <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-yellow-500 to-amber-700 flex items-center justify-center shadow-lg border border-yellow-300/40">
+                    <svg class="w-10 h-10 text-slate-900" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <h1 class="text-2xl font-black tracking-wider text-white">RCASAS</h1>
+            <p class="text-xs font-semibold tracking-widest text-gold uppercase mt-0.5">Administración y Gestión Residencial E.I.R.L.</p>
+            <p class="text-xs text-slate-300 italic mt-1">"Tu paz y tu unión, son nuestra misión"</p>
+            <div class="mt-3 inline-block bg-slate-900/60 border border-gold/40 px-3 py-1 rounded-full text-xs text-yellow-200 font-medium">
+                Edificio Blue - Control de Medidores
+            </div>
+        </div>
+
+        <!-- Navegación por Pestañas -->
+        <div class="flex justify-center gap-3 mb-6">
+            <button id="btnTabRegistro" onclick="cambiarTab('registro')" class="bg-gold text-slate-950 px-5 py-2.5 rounded-xl font-bold transition shadow-lg flex items-center gap-2">
+                <span>📝</span> Registrar Lectura
+            </button>
+            <button id="btnTabHistorial" onclick="cambiarTab('historial')" class="bg-slate-800 text-slate-300 border border-slate-700 px-5 py-2.5 rounded-xl font-bold hover:bg-slate-700 transition flex items-center gap-2">
+                <span>📊</span> Historial y Filtros
+            </button>
+        </div>
+
+        <!-- ================= VISTA 1: REGISTRO ================= -->
+        <div id="vistaRegistro" class="bg-rcasas-card border border-gold/20 p-6 rounded-2xl shadow-2xl max-w-lg mx-auto">
+            <h2 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2">Nuevo Registro de Lectura</h2>
+            
+            <form id="formLectura" class="space-y-4">
+                <!-- Tarifa del Mes -->
+                <div class="bg-slate-900/80 p-3.5 rounded-xl border border-gold/30">
+                    <label class="block text-xs font-bold text-gold uppercase tracking-wider mb-1">Tarifa del Mes (S/ por m³)</label>
+                    <p class="text-xs text-slate-400 mb-2">Valor obtenido del recibo global de Sedalib.</p>
+                    <input type="number" step="0.001" id="inputTarifa" class="w-full p-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white focus:border-gold focus:outline-none" placeholder="Ej. 4.50" required>
+                </div>
+
+                <!-- Departamento -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1 uppercase tracking-wider">Departamento / Unidad</label>
+                    <select id="selectDepa" class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:border-gold focus:outline-none" required>
+                        <option value="">Cargando departamentos...</option>
+                    </select>
+                </div>
+
+                <!-- Lectura Anterior -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1 uppercase tracking-wider">Lectura Anterior</label>
+                    <input type="number" step="0.001" id="inputAnterior" class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:border-gold focus:outline-none" required>
+                </div>
+
+                <!-- Lectura Actual -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1 uppercase tracking-wider">Lectura Actual</label>
+                    <input type="number" step="0.001" id="inputActual" class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:border-gold focus:outline-none" required>
+                </div>
+
+                <!-- Foto del Medidor -->
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1 uppercase tracking-wider">Evidencia (Foto del Medidor)</label>
+                    <input type="file" id="fotoMedidor" accept="image/*" capture="environment" class="w-full p-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-slate-300 file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-gold file:text-slate-950 hover:file:bg-yellow-600">
+                </div>
+
+                <button type="submit" class="w-full bg-gold text-slate-950 p-3 rounded-xl font-extrabold hover:bg-yellow-600 transition shadow-lg mt-2">
+                    Guardar Lectura - RCASAS
+                </button>
+            </form>
+        </div>
+
+        <!-- ================= VISTA 2: HISTORIAL ================= -->
+        <div id="vistaHistorial" class="bg-rcasas-card border border-gold/20 p-6 rounded-2xl shadow-2xl hidden">
+            <h2 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2">Historial de Lecturas Registradas</h2>
+            
+            <!-- Filtros -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                <div>
+                    <label class="block text-xs font-semibold text-gold mb-1">Filtrar por Departamento</label>
+                    <select id="filtroDepa" onchange="filtrarHistorial()" class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:border-gold focus:outline-none">
+                        <option value="">Todos los departamentos</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gold mb-1">Buscar por Mes / Fecha (Ej: 9/2026 o 2026)</label>
+                    <input type="text" id="filtroTexto" oninput="filtrarHistorial()" placeholder="Escribe mes o año..." class="w-full p-2.5 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:border-gold focus:outline-none">
+                </div>
+            </div>
+
+            <!-- Tabla de Historial -->
+            <div class="overflow-x-auto rounded-xl border border-slate-800">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-900 text-gold text-xs uppercase tracking-wider">
+                            <th class="p-3.5">Fecha</th>
+                            <th class="p-3.5">Depa</th>
+                            <th class="p-3.5">Ant.</th>
+                            <th class="p-3.5">Act.</th>
+                            <th class="p-3.5">Consumo</th>
+                            <th class="p-3.5">Tarifa</th>
+                            <th class="p-3.5">Total</th>
+                            <th class="p-3.5 text-center">Evidencia</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaHistorialBody" class="text-sm divide-y divide-slate-800 bg-slate-900/30">
+                        <tr>
+                            <td colspan="8" class="p-4 text-center text-slate-400">Cargando historial...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de Conexión y Lógica -->
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+        const SUPABASE_URL = 'https://xotmdpnamgfaebguvtch.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_kwlfF6ZPpnzW5_3QVYMs1Q_AF4ewXv9';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const form = document.getElementById('formLectura');
+        const inputTarifa = document.getElementById('inputTarifa');
+        const selectDepa = document.getElementById('selectDepa');
+        const inputAnterior = document.getElementById('inputAnterior');
+        const inputActual = document.getElementById('inputActual');
+        const inputFoto = document.getElementById('fotoMedidor');
+
+        let listaHistorialCompleta = [];
+
+        // Cambiar entre pestañas
+        window.cambiarTab = function(tab) {
+            const vistaReg = document.getElementById('vistaRegistro');
+            const vistaHist = document.getElementById('vistaHistorial');
+            const btnReg = document.getElementById('btnTabRegistro');
+            const btnHist = document.getElementById('btnTabHistorial');
+
+            if (tab === 'registro') {
+                vistaReg.classList.remove('hidden');
+                vistaHist.classList.add('hidden');
+                btnReg.className = "bg-gold text-slate-950 px-5 py-2.5 rounded-xl font-bold transition shadow-lg flex items-center gap-2";
+                btnHist.className = "bg-slate-800 text-slate-300 border border-slate-700 px-5 py-2.5 rounded-xl font-bold hover:bg-slate-700 transition flex items-center gap-2";
+            } else {
+                vistaReg.classList.add('hidden');
+                vistaHist.classList.remove('hidden');
+                btnHist.className = "bg-gold text-slate-950 px-5 py-2.5 rounded-xl font-bold transition shadow-lg flex items-center gap-2";
+                btnReg.className = "bg-slate-800 text-slate-300 border border-slate-700 px-5 py-2.5 rounded-xl font-bold hover:bg-slate-700 transition flex items-center gap-2";
+                cargarHistorial();
+            }
+        }
+
+       // Cargar departamentos directamente desde la tabla 'Departamento' de Supabase
+        async function cargarDepartamentos() {
+            try {
+                const { data, error } = await supabase.from('Departamento').select('*');
+                
+                if (error || !data || data.length === 0) {
+                    console.error("Error al cargar departamentos de Supabase:", error ? error.message : "Sin datos");
+                    selectDepa.innerHTML = '<option value="">Error al cargar departamentos</option>';
+                    return;
+                }
+
+                selectDepa.innerHTML = '<option value="">Seleccione...</option>';
+                const filtroDepa = document.getElementById('filtroDepa');
+                if (filtroDepa) filtroDepa.innerHTML = '<option value="">Todos los departamentos</option>';
+                
+                data.forEach(item => {
+                    const nombreDepa = item.numero || item.departamento || item.nombre || Object.values(item)[1]; 
+                    
+                    const opt1 = document.createElement('option');
+                    opt1.value = nombreDepa;
+                    opt1.textContent = `Departamento ${nombreDepa}`;
+                    selectDepa.appendChild(opt1);
+
+                    if (filtroDepa) {
+                        const opt2 = document.createElement('option');
+                        opt2.value = nombreDepa;
+                        opt2.textContent = `Departamento ${nombreDepa}`;
+                        filtroDepa.appendChild(opt2);
+                    }
+                });
+            } catch (err) {
+                console.error("Excepción:", err);
+                selectDepa.innerHTML = '<option value="">Error al cargar departamentos</option>';
+            }
+        }
+
+        cargarDepartamentos();
+
+        // Guardar Lectura (Apuntando a la tabla 'lecturas_medidores_blue')
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const tarifaMes = parseFloat(inputTarifa.value);
+            const depa = selectDepa.value;
+            const ant = parseFloat(inputAnterior.value);
+            const act = parseFloat(inputActual.value);
+            
+            if (act < ant) {
+                alert("La lectura actual no puede ser menor que la anterior.");
+                return;
+            }
+
+            const consumo = act - ant;
+            const total = consumo * tarifaMes;
+            let fotoUrl = "";
+            const fechaLocal = new Date().toLocaleString();
+
+            if (inputFoto.files.length > 0) {
+                const file = inputFoto.files[0];
+                const fileName = `rcasas_blue_${depa}_${Date.now()}.jpg`;
+                
+                // CORREGIDO: Se apunta al bucket correcto 'lecturas'
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from('lecturas')
+                    .upload(fileName, file);
+
+                if (uploadError) {
+                    alert("Error al subir la foto: " + uploadError.message);
+                    return;
+                }
+
+                // CORREGIDO: Se obtiene la URL pública del bucket 'lecturas'
+                const { data: publicURL } = supabase.storage
+                    .from('lecturas')
+                    .getPublicUrl(fileName);
+                    
+                fotoUrl = publicURL.publicUrl;
+            }
+
+            const { error } = await supabase
+                .from('lecturas_medidores_blue')
+                .insert([
+                    { 
+                        departamento: depa, 
+                        lecturaAnterior: ant, 
+                        lecturaActual: act, 
+                        consumo: consumo, 
+                        tarifa: tarifaMes, 
+                        total_pagar: total, 
+                        foto_url: fotoUrl,
+                        fecha_registro: fechaLocal 
+                    }
+                ]);
+
+            if (error) {
+                alert("Hubo un error al guardar en la base de datos: " + error.message);
+            } else {
+                alert(
+                    `¡Lectura RCASAS guardada con éxito!\n\n` +
+                    `• Departamento: ${depa}\n` +
+                    `• Tarifa Sedalib Aplicada: S/ ${tarifaMes.toFixed(3)}\n` +
+                    `• Lectura Anterior: ${ant.toFixed(3)}\n` +
+                    `• Lectura Actual: ${act.toFixed(3)}\n` +
+                    `• Consumo del Mes: ${consumo.toFixed(3)} m³\n` +
+                    `• Total a Pagar: S/ ${total.toFixed(2)}`
+                );
+                form.reset();
+                cargarDepartamentos();
+            }
+        });
+
+        // Cargar Historial desde Supabase (Apuntando a 'lecturas_medidores_blue')
+        async function cargarHistorial() {
+            const tbody = document.getElementById('tablaHistorialBody');
+            tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-400">Cargando registros...</td></tr>`;
+
+            const { data, error } = await supabase
+                .from('lecturas_medidores_blue')
+                .select('*')
+                .order('create_at', { ascending: false });
+
+            if (error) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-red-400">Error al cargar el historial: ${error.message}</td></tr>`;
+                return;
+            }
+
+            listaHistorialCompleta = data || [];
+            mostrarHistorial(listaHistorialCompleta);
+        }
+
+        // Renderizar Tabla de Historial
+        function mostrarHistorial(datos) {
+            const tbody = document.getElementById('tablaHistorialBody');
+            
+            if (datos.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="p-4 text-center text-slate-400">No se encontraron registros.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            datos.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-800/50 transition";
+                
+                const fotoLink = item.foto_url 
+                    ? `<a href="${item.foto_url}" target="_blank" class="text-yellow-400 underline font-medium hover:text-yellow-300">Ver Foto</a>` 
+                    : `<span class="text-slate-500">Sin foto</span>`;
+
+                tr.innerHTML = `
+                    <td class="p-3.5 text-xs text-slate-300">${item.fecha_registro || 'N/A'}</td>
+                    <td class="p-3.5 font-bold text-white">Depa ${item.departamento}</td>
+                    <td class="p-3.5 text-slate-300">${item.lecturaAnterior ?? '-'}</td>
+                    <td class="p-3.5 text-slate-300">${item.lecturaActual ?? '-'}</td>
+                    <td class="p-3.5 font-medium text-slate-200">${item.consumo != null ? item.consumo.toFixed(3) + ' m³' : '-'}</td>
+                    <td class="p-3.5 text-slate-300">S/ ${item.tarifa != null ? item.tarifa.toFixed(3) : '5.50'}</td>
+                    <td class="p-3.5 font-black text-yellow-400">S/ ${item.total_pagar != null ? item.total_pagar.toFixed(2) : '-'}</td>
+                    <td class="p-3.5 text-center">${fotoLink}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Filtrar Historial
+        window.filtrarHistorial = function() {
+            const depaFiltro = document.getElementById('filtroDepa').value;
+            const textoFiltro = document.getElementById('filtroTexto').value.toLowerCase();
+
+            const filtrados = listaHistorialCompleta.filter(item => {
+                const coincideDepa = depaFiltro === "" || String(item.departamento) === String(depaFiltro);
+                const fechaStr = (item.fecha_registro || "").toLowerCase();
+                const coincideTexto = textoFiltro === "" || fechaStr.includes(textoFiltro);
+                
+                return coincideDepa && coincideTexto;
+            });
+
+            mostrarHistorial(filtrados);
+        }
+    </script>
+</body>
+</html>
